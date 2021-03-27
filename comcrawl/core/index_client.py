@@ -65,7 +65,7 @@ class IndexClient:
                 multi-threading only if set.
 
         """
-        self.results = search_multiple_indexes(url, self.indexes, threads)
+        self.results = search_multiple_indexes(url, self.indexes, self.page, threads)
 
     def download(self, threads: int = None) -> None:
         """Download.

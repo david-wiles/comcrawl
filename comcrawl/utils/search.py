@@ -42,6 +42,7 @@ def search_single_index(index: str, url: str, page: int) -> ResultList:
 
 def search_multiple_indexes(url: str,
                             indexes: IndexList,
+                            page: int = -1,
                             threads: int = None) -> ResultList:
     """Searches multiple Common Crawl Indexes for URL pattern.
 
@@ -63,6 +64,11 @@ def search_multiple_indexes(url: str,
         mulithreaded_search = make_multithreaded(search_single_index,
                                                  threads)
         results = mulithreaded_search(indexes, url, -1)
+
+    # single-threaded, single-page search
+    elif len(indexes) == 1:
+        index_results = search_single_index(indexes[0], url, page)
+        results.extend(index_results)
 
     # single-threaded search
     else:
