@@ -28,7 +28,8 @@ class IndexClient:
 
     def __init__(self,
                  indexes: IndexList = None,
-                 verbose: bool = False) -> None:
+                 verbose: bool = False,
+                 page: int = -1) -> None:
         """Initializes the class instance.
 
         Args:
@@ -42,6 +43,8 @@ class IndexClient:
         """
         if verbose:
             logging.basicConfig(level=logging.DEBUG)
+
+        self.page = page
 
         if indexes:
             self.indexes = indexes

@@ -11,10 +11,10 @@ from ..types import ResultList, IndexList
 from .multithreading import make_multithreaded
 
 URL_TEMPLATE = ("https://index.commoncrawl.org/"
-                "CC-MAIN-{index}-index?url={url}&output=json")
+                "CC-MAIN-{index}-index?url={url}&output=json{page}")
 
 
-def search_single_index(index: str, url: str) -> ResultList:
+def search_single_index(index: str, url: str, page: int) -> ResultList:
     """Searches specific Common Crawl Index for given URL pattern.
 
     Args:
@@ -27,7 +27,9 @@ def search_single_index(index: str, url: str) -> ResultList:
     """
     results: ResultList = []
 
-    url = URL_TEMPLATE.format(index=index, url=url)
+    page = "" if page < 0 else ("&page={page}").format(page=page)
+
+    url = URL_TEMPLATE.format(index=index, url=url, page=page)
     response = requests.get(url)
 
     if response.status_code == 200:
@@ -60,12 +62,12 @@ def search_multiple_indexes(url: str,
     if threads:
         mulithreaded_search = make_multithreaded(search_single_index,
                                                  threads)
-        results = mulithreaded_search(indexes, url)
+        results = mulithreaded_search(indexes, url, -1)
 
     # single-threaded search
     else:
         for index in indexes:
-            index_results = search_single_index(index, url)
+            index_results = search_single_index(index, url, -1)
             results.extend(index_results)
 
     return results
